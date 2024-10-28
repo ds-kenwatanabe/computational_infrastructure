@@ -64,10 +64,12 @@ class InfraApp:
             st.write("Bem-vindo ao App de Infraestrutura Computacional!")
             st.write("""
             Esta é uma aplicação que tem como objetivo explicar o que é infraestrutura computacional, 
-            tanto a parte física (hardware), quanto a parte de software.""")
+            o que é a parte física (hardware), quanto a parte de software. O que são redes de computadores, 
+            camadas das redes, nuvem computacional e acesso remoto\n.
+            \nUtilize a aba de navegação para selecionar a sessão que quiser.""")
 
         elif selection == "O que é Infraestrutura Computacional?":
-            st.header("O que é Infraestrutura Computacional?")
+            st.header(":computer: O que é Infraestrutura Computacional?")
             st.write("A infraestrutura computacional é tudo o que você precisa para criar e executar aplicações "
                      "de software em uma organização. Ela inclui hardware, componentes de rede, o sistema operacional, "
                      "armazenamento de dados e vários softwares que uma organização utiliza para fornecer serviços "
@@ -82,14 +84,14 @@ class InfraApp:
                      "adquirir e os que preferem utilizar como serviço.")
             st.header("Componentes da Infraestrutura Computacional")
 
-            st.subheader("Hardware")
+            st.subheader(":wrench: Hardware")
             st.write("Hardware computacional se refere a todas as máquinas e dispositivos físicos que uma organização "
                      "utiliza em seu ambiente computacional. Os dispositivos de armazenamento e os servidores que "
                      "fornecem recursos de rede à empresa fazem parte do hardware computacional. "
                      "Todos os dispositivos de endpoint, como computadores, telefones e tablets, "
                      "também se enquadram nessa categoria.")
 
-            st.subheader("Software")
+            st.subheader(":cd: Software")
             st.write("""
             A infraestrutura de software computacional inclui:
             
@@ -151,7 +153,7 @@ class InfraApp:
                      "FTP (transferência de arquivos), e SMTP (envio de e-mails).")
 
         elif selection == "Nuvem e acesso remoto e criptografia":
-            st.title("Nuvem computacional")
+            st.title(":cloud: Nuvem computacional")
             st.write(" A nuvem computacional (cloud computing) refere-se à entrega de serviços de computação pela "
                      "internet. Esses serviços incluem servidores, armazenamento, bancos de dados, redes, "
                      "software, entre outros, que podem ser acessados sob demanda, sem a necessidade de "
@@ -159,13 +161,13 @@ class InfraApp:
                      "dispositivos físicos, as organizações podem utilizar recursos na nuvem para "
                      "maior flexibilidade e escalabilidade.")
 
-            st.title("Acesso Remoto")
+            st.title(":earth_americas: Acesso Remoto")
             st.write("O acesso remoto é a capacidade de acessar um sistema, servidor ou dispositivo de qualquer "
                      "local geográfico através de uma rede (geralmente a internet). "
                      "Esse tipo de acesso permite que usuários interajam com os recursos do sistema como se "
                      "estivessem fisicamente presentes, facilitando o trabalho remoto e o suporte técnico.")
 
-            st.title("Criptografia")
+            st.title(":closed_lock_with_key: Criptografia")
             st.write("A criptografia é a técnica de codificar informações de modo que apenas aqueles com a chave "
                      "correta possam decifrá-las. Ela garante a confidencialidade e segurança dos dados transmitidos "
                      "ou armazenados, transformando texto legível (texto claro) em um formato ilegível (texto cifrado) "
@@ -219,27 +221,27 @@ class InfraApp:
             6. \ \text{Descriptografia: } M = C^d \ (\text{mod} \ n)
             ''')
 
-            st.title("Teste a criptografia RSA!")
+            st.title("Teste a criptografia RSA")
             p = st.number_input("Insira um número primo p", min_value=2, value=61)
             q = st.number_input("Insira um número primo q", min_value=2, value=53)
 
             if p > 1 and q > 1:
                 public_key, private_key = self.generate_keys(p, q)
-                st.write(f"Chave pública: {public_key}")
-                st.write(f"Chave privada: {private_key}")
+                st.write(f":key: Chave pública: {public_key}")
+                st.write(f":key: Chave privada: {private_key}")
 
                 message = st.text_input("Digite a mensagem para cifrar")
 
                 if message:
                     encrypted_message = self.encrypt(message, public_key)
-                    st.write(f"Mensagem Cifrada: {encrypted_message}")
+                    st.write(f":lock: Mensagem Cifrada: {encrypted_message}")
 
                     decrypted_message = self.decrypt(encrypted_message, private_key)
-                    st.write(f"Mensagem Decifrada: {decrypted_message}")
+                    st.write(f":unlock: Mensagem Decifrada: {decrypted_message}")
 
 
         elif selection == "Referências":
-            st.header("Referências")
+            st.header(":page_with_curl: Referências")
             st.markdown(":link: [O que é infraestrutura de TI?](https://aws.amazon.com/pt/what-is/it-infrastructure/)")
             st.markdown(":globe_with_meridians: [Camadas - OSI](https://pt.wikipedia.org/wiki/Modelo_OSI)")
 
