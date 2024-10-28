@@ -33,11 +33,26 @@ class InfraApp:
         O Sistema de Nomes de Domínio (DNS) traduz nomes de domínios amigáveis para humanos (como `google.com`) em endereços IP 
         que os computadores usam para se identificarem na rede. Quando você insere um nome de domínio no seu navegador, uma consulta DNS 
         é realizada para encontrar o endereço IP correspondente.
+
+        **Passo a Passo da Consulta DNS:**
+
+        1. **Consulta Recursiva:** O cliente (seu navegador) envia uma consulta para o resolvedor DNS recursivo do 
+        seu provedor de internet.
+        2. **Servidor Raiz:** Se o resolvedor não tiver o registro em cache, ele consulta um servidor raiz DNS.
+        3. **Servidor TLD:** O servidor raiz direciona a consulta para um servidor de Domínio de Topo (TLD) 
+        apropriado (por exemplo, `.com`).
+        4. **Servidor Autoritativo:** O servidor TLD direciona a consulta para o servidor DNS autoritativo 
+        para o domínio específico.
+        5. **Resposta:** O servidor autoritativo responde com o endereço IP correspondente ao nome de domínio.
+        6. **Cache:** O resolvedor DNS armazena o resultado em cache para futuras consultas, 
+        reduzindo o tempo de resposta.
+
+        Isso permite que você acesse sites usando nomes fáceis de lembrar, 
+        sem precisar memorizar endereços IP numéricos.
         """)
 
         st.header("Visualização de Transmissão de Dados")
 
-        # Define um grafo de rede direcionado
         G = nx.DiGraph()
         nodes = ["Cliente", "Roteador A", "Roteador B", "Servidor"]
         edges = [("Cliente", "Roteador A"), ("Roteador A", "Roteador B"), ("Roteador B", "Servidor")]
@@ -52,13 +67,21 @@ class InfraApp:
             "Servidor": (3, 0)
         }
 
+        transmission_steps_info = [
+            "🔄 **Cliente:** O cliente está enviando dados para o servidor.",
+            "🔄 **Roteador A:** Roteador A está encaminhando os dados para o próximo roteador.",
+            "🔄 **Roteador B:** Roteador B está encaminhando os dados para o servidor.",
+            "✅ **Servidor:** O pacote chegou ao servidor."
+        ]
+
         if 'transmission_step' not in st.session_state:
             st.session_state.transmission_step = 0
 
-        fig, ax = plt.subplots(figsize=(6, 4))
-        nx.draw_networkx_nodes(G, pos, node_color='lightblue', node_size=1000, ax=ax)
-        nx.draw_networkx_edges(G, pos, arrowstyle='-', arrowsize=10, ax=ax)
-        nx.draw_networkx_labels(G, pos, font_size=10, font_weight='bold', ax=ax)
+        # Cria o gráfico
+        fig, ax = plt.subplots(figsize=(8, 6))
+        nx.draw_networkx_nodes(G, pos, node_color='lightblue', node_size=2000, ax=ax)
+        nx.draw_networkx_edges(G, pos, arrowstyle='->', arrowsize=20, ax=ax)
+        nx.draw_networkx_labels(G, pos, font_size=12, font_weight='bold', ax=ax)
 
         if st.session_state.transmission_step > 0:
             current_node = nodes[st.session_state.transmission_step - 1]
@@ -67,7 +90,7 @@ class InfraApp:
                 pos,
                 nodelist=[current_node],
                 node_color='orange',
-                node_size=1000,
+                node_size=2000,
                 ax=ax
             )
 
@@ -76,16 +99,18 @@ class InfraApp:
 
         st.markdown("### Caminho de Transmissão de Pacotes")
         st.write("""
-        Quando o cliente envia dados para o servidor, eles passam pelo Roteador A e pelo Roteador B. 
-        Cada roteador determina o próximo salto com base em tabelas de roteamento e protocolos, 
-        garantindo que os dados alcancem seu destino de forma eficiente.
+        Quando o cliente envia dados para o servidor, eles passam pelo Roteador A e pelo Roteador B. Cada roteador determina o próximo salto 
+        com base em tabelas de roteamento e protocolos, garantindo que os dados alcancem seu destino de forma eficiente.
         """)
+
+        if st.session_state.transmission_step > 0:
+            st.write(transmission_steps_info[st.session_state.transmission_step - 1])
 
         if st.session_state.transmission_step < len(nodes):
             if st.button("🚀 Simular Transmissão de Pacotes"):
                 st.session_state.transmission_step += 1
         else:
-            st.write("✅ **O pacote chegou ao Servidor.**")
+            st.write("✅ **A transmissão de pacotes foi concluída com sucesso.**")
 
         st.markdown("---")
         st.subheader("Como Funciona a Transmissão de Dados")
@@ -93,6 +118,17 @@ class InfraApp:
         Os dados na Internet são divididos em pacotes menores. Esses pacotes viajam através de vários roteadores e redes 
         para chegar ao seu destino. Protocolos como TCP/IP gerenciam a transmissão, garantindo a integridade dos dados e a 
         correta sequência dos pacotes.
+
+        **Principais Componentes e Conceitos:**
+
+        - **Pacotes de Dados:** Unidades básicas de transmissão na rede, contendo informações como endereço de origem, 
+        destino e dados reais.
+        - **Roteadores:** Dispositivos que direcionam os pacotes pelo caminho mais eficiente até o destino.
+        - **Protocolo TCP/IP:** Conjunto de regras que permitem a comunicação entre dispositivos na Internet, 
+        garantindo que os pacotes sejam entregues corretamente.
+        - **Endereçamento IP:** Sistema que atribui endereços únicos a cada dispositivo na rede, permitindo a 
+        localização e comunicação entre eles.
+        - **Latency e Largura de Banda:** Fatores que influenciam a velocidade e eficiência da transmissão de dados.
         """)
 
     def gcd(self, a, b):
@@ -336,7 +372,8 @@ class InfraApp:
         elif selection == "Referências":
             st.header(":page_with_curl: Referências")
             st.markdown(":link: [O que é infraestrutura de TI?](https://aws.amazon.com/pt/what-is/it-infrastructure/)")
-            st.markdown(":globe_with_meridians: [Camadas - OSI](https://pt.wikipedia.org/wiki/Modelo_OSI)")
+            st.markdown(":link: [Camadas - OSI](https://pt.wikipedia.org/wiki/Modelo_OSI)")
+            st.markdown(":link: [DNS](https://aws.amazon.com/pt/route53/what-is-dns/)")
 
         elif selection == "GitHub":
             st.header(":file_folder: Repositório do GitHub")
