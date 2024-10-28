@@ -1,8 +1,99 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
+import networkx as nx
+import matplotlib.pyplot as plt
 
 
 class InfraApp:
+
+    def internet(self):
+        st.title("Demonstração Interativa de Como Funciona a Internet")
+
+        st.header("Simulação de Consulta DNS")
+
+        # Mapeamento DNS simples
+        dns_records = {
+            "google.com": "142.250.190.14",
+            "openai.com": "104.18.22.233",
+            "streamlit.io": "52.20.45.66"
+        }
+
+        domain = st.selectbox("Selecione o Nome do Domínio:", list(dns_records.keys()))
+
+        if domain:
+            ip = dns_records.get(domain.lower())
+            if ip:
+                st.write(f"**Endereço IP para {domain}:** {ip}")
+            else:
+                st.write("🔍 Domínio não encontrado nos registros DNS.")
+
+        st.markdown("---")
+        st.subheader("Como Funciona o DNS")
+        st.write("""
+        O Sistema de Nomes de Domínio (DNS) traduz nomes de domínios amigáveis para humanos (como `google.com`) em endereços IP 
+        que os computadores usam para se identificarem na rede. Quando você insere um nome de domínio no seu navegador, uma consulta DNS 
+        é realizada para encontrar o endereço IP correspondente.
+        """)
+
+        st.header("Visualização de Transmissão de Dados")
+
+        # Define um grafo de rede direcionado
+        G = nx.DiGraph()
+        nodes = ["Cliente", "Roteador A", "Roteador B", "Servidor"]
+        edges = [("Cliente", "Roteador A"), ("Roteador A", "Roteador B"), ("Roteador B", "Servidor")]
+
+        G.add_nodes_from(nodes)
+        G.add_edges_from(edges)
+
+        pos = {
+            "Cliente": (0, 0),
+            "Roteador A": (1, 1),
+            "Roteador B": (2, 1),
+            "Servidor": (3, 0)
+        }
+
+        if 'transmission_step' not in st.session_state:
+            st.session_state.transmission_step = 0
+
+        fig, ax = plt.subplots(figsize=(6, 4))
+        nx.draw_networkx_nodes(G, pos, node_color='lightblue', node_size=1000, ax=ax)
+        nx.draw_networkx_edges(G, pos, arrowstyle='-', arrowsize=10, ax=ax)
+        nx.draw_networkx_labels(G, pos, font_size=10, font_weight='bold', ax=ax)
+
+        if st.session_state.transmission_step > 0:
+            current_node = nodes[st.session_state.transmission_step - 1]
+            nx.draw_networkx_nodes(
+                G,
+                pos,
+                nodelist=[current_node],
+                node_color='orange',
+                node_size=1000,
+                ax=ax
+            )
+
+        st.pyplot(fig)
+        plt.close(fig)
+
+        st.markdown("### Caminho de Transmissão de Pacotes")
+        st.write("""
+        Quando o cliente envia dados para o servidor, eles passam pelo Roteador A e pelo Roteador B. 
+        Cada roteador determina o próximo salto com base em tabelas de roteamento e protocolos, 
+        garantindo que os dados alcancem seu destino de forma eficiente.
+        """)
+
+        if st.session_state.transmission_step < len(nodes):
+            if st.button("🚀 Simular Transmissão de Pacotes"):
+                st.session_state.transmission_step += 1
+        else:
+            st.write("✅ **O pacote chegou ao Servidor.**")
+
+        st.markdown("---")
+        st.subheader("Como Funciona a Transmissão de Dados")
+        st.write("""
+        Os dados na Internet são divididos em pacotes menores. Esses pacotes viajam através de vários roteadores e redes 
+        para chegar ao seu destino. Protocolos como TCP/IP gerenciam a transmissão, garantindo a integridade dos dados e a 
+        correta sequência dos pacotes.
+        """)
 
     def gcd(self, a, b):
         while b != 0:
@@ -56,8 +147,8 @@ class InfraApp:
             st.sidebar.title("Navegação")
             selection = option_menu("Selecione", ["Home", "O que é Infraestrutura Computacional?",
                                     "Redes de computadores, Internet e Web", "Nuvem e acesso remoto e criptografia",
-                                                  "Referências"],
-                                    icons=['house', 'hdd-stack', 'globe', 'cloud'])
+                                                  "Referências", "GitHub"],
+                                    icons=['house', 'hdd-stack', 'globe', 'cloud', 'list-columns-reverse', 'github'])
 
         if selection == "Home":
             st.header("Home")
@@ -152,6 +243,8 @@ class InfraApp:
             st.write("Fornece serviços de rede diretamente aos aplicativos, como o HTTP (utilizado na web), "
                      "FTP (transferência de arquivos), e SMTP (envio de e-mails).")
 
+            self.internet()
+
         elif selection == "Nuvem e acesso remoto e criptografia":
             st.title(":cloud: Nuvem computacional")
             st.write(" A nuvem computacional (cloud computing) refere-se à entrega de serviços de computação pela "
@@ -245,6 +338,9 @@ class InfraApp:
             st.markdown(":link: [O que é infraestrutura de TI?](https://aws.amazon.com/pt/what-is/it-infrastructure/)")
             st.markdown(":globe_with_meridians: [Camadas - OSI](https://pt.wikipedia.org/wiki/Modelo_OSI)")
 
+        elif selection == "GitHub":
+            st.header(":file_folder: Repositório do GitHub")
+            st.markdown(":link: [Repo](https://github.com/ds-kenwatanabe/computational_infrastructure)")
 
 if __name__ == '__main__':
     app = InfraApp()
