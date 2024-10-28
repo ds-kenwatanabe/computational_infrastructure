@@ -374,6 +374,11 @@ class InfraApp:
             st.markdown(":link: [O que é infraestrutura de TI?](https://aws.amazon.com/pt/what-is/it-infrastructure/)")
             st.markdown(":link: [Camadas - OSI](https://pt.wikipedia.org/wiki/Modelo_OSI)")
             st.markdown(":link: [DNS](https://aws.amazon.com/pt/route53/what-is-dns/)")
+            st.markdown(":page_facing_up: "
+                        "[PDF  - Redes e Internet]"
+                        "(https://github.com/ds-kenwatanabe/computational_infrastructure/blob/master/pdfs/redes_e_internet.pdf)")
+            st.markdown(":page_facing_up: [PDF  - Nuvem e acesso remoto]"
+                        "(https://github.com/ds-kenwatanabe/computational_infrastructure/blob/master/pdfs/nuvem_e_acesso_remoto.pdf)")
 
         elif selection == "GitHub":
             st.header(":file_folder: Repositório do GitHub")
